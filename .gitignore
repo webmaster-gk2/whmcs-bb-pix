@@ -1,0 +1,6 @@
+vendor
+composer-cache
+.devcontainer/devcontainer.json
+.vscode/sftp.json
+node_modules
+*.key

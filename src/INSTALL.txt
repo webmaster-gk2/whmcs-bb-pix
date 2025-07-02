@@ -1,0 +1,19 @@
+# Portuguese tutorial
+
+Passo 1: descompacte o arquivo whmcs-bb-pix.zip
+
+Passo 2: acesse a pasta whmcs-bb-pix, resultante da descompactação, dentro dela terá duas pastas: "modules" e "includes".
+
+Passo 3: acesse a raiz de instalação do seu WHMCS
+
+Passe 4: arraste e solte a pasta "modules" e "includes" da pasta descompactada para a raiz do seu WHMCS.
+
+# English tutorial
+
+Step 1: Unzip the whmcs-bb-pix.zip file
+
+Step 2: access the whmcs-bb-pix folder, resulting from the unziping, inside it will have a "modules" and "includes" folder.
+
+Step 3: Access your WHMCS installation root
+
+Pass 4: Drag and drop the "modules" and "includes" folder from the unzipped folder to the root of your WHMCS.

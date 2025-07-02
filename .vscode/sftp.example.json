@@ -1,0 +1,12 @@
+{
+    "name": "whmcs.linknacional.com.br",
+    "host": "whmcs.linknacional.com.br",
+    "protocol": "ftp",
+    "port": 21,
+    "username": "",
+    "remotePath": "/",
+    "context": "src",
+    "uploadOnSave": true,
+    "useTempFile": true,
+    "password": ""
+}

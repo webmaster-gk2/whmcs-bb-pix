@@ -1,0 +1,68 @@
+name: Main branch - pull request approved
+
+on:
+  pull_request:
+    types: [closed]
+    branches: [main]
+env:
+  PLUGIN_NAME: whmcs-bb-pix
+  WORK_DIR: src
+  COMPOSER_JSON_PATH: modules/gateways/lknbbpix
+  PHP_VERSION: "8.1"
+
+jobs:
+  encode-build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v3
+
+      # Add plugin files to a root directory
+      - name: Generate .zip for upload to repository
+        working-directory: ${{env.WORK_DIR}}
+        run: "mkdir $PLUGIN_NAME && mv -t ./$PLUGIN_NAME ./modules ./includes ./INSTALL.txt && ls -lah"
+
+      # To avoid encoding /vendor, Composer steps must run after encoding
+      - name: Cache Composer dependencies
+        uses: actions/cache@v3
+        with:
+          path: /tmp/composer-cache
+          key: ${{ runner.os }}-${{ hashFiles('**/composer.lock') }}
+
+      - name: Composer install
+        uses: php-actions/composer@v6
+        with:
+          php_version: ${{ env.PHP_VERSION }}
+          working_dir: ${{ env.WORK_DIR }}/${{ env.PLUGIN_NAME }}/${{ env.COMPOSER_JSON_PATH }}
+          args: --ignore-platform-reqs
+          command: install
+          dev: no
+
+      # Compact plugin as .zip
+      - name: Archive Release
+        uses: thedoctor0/zip-release@master
+        with:
+          type: "zip"
+          path: ${{ env.PLUGIN_NAME }}
+          directory: ${{ env.WORK_DIR }}
+          filename: ${{ env.PLUGIN_NAME }}.zip
+
+      # Update version tag
+      - name: Bump version and push tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: "2.2.0" # // TODO caso necessário definir a tag da release manualmente
+
+      # Generate new release
+      - name: Generate new Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: ${{ env.WORK_DIR }}/${{ env.PLUGIN_NAME }}.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit: "main"
+          draft: true
+          tag: ${{ steps.tag_version.outputs.new_tag }}
+          name: Release ${{ steps.tag_version.outputs.new_tag }}
